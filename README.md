@@ -5,10 +5,15 @@ This repository contains a complete workflow for processing **Photoplethysmograp
 
 The project covers the following steps:  
 ✅ **Data Visualization** – Understanding the dataset and visualizing raw signals. 
+
 ✅ **Linking PPG Signals to Glucose Levels** – Mapping each PPG signal to its respective glucose level. 
+
 ✅ **Cleaning the Data** – Applying a **Finite Impulse Response (FIR) filter** to remove noise. 
-✅ **Plotting Raw vs. Cleaned Signals** – Comparing signals before and after filtering. 
+
+✅ **Plotting Raw vs. Cleaned Signals** – Comparing signals before and after filtering.
+
 ✅ **Feature Extraction** – Extracting time-domain, frequency-domain, and morphological features. 
+
 ✅ **Dataset Preparation for ML/CNN** – Creating structured `.csv` and `.mat` files for model training. 
 
 ---
