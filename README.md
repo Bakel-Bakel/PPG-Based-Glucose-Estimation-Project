@@ -16,34 +16,10 @@ The project covers the following steps:
 
 ✅ **Dataset Preparation for ML/CNN** – Creating structured `.csv` and `.mat` files for model training. 
 
----
-
-## **📂 File Structure**  
-
-```
-📦 PPG_Glucose_Estimation
- ┣ 📂 PPG_Dataset
- ┃ ┣ 📂 RawData              # Original PPG signals (.mat)
- ┃ ┣ 📂 Labels               # Corresponding glucose level files (.mat)
- ┃ ┣ 📂 Figures              # Pre-plotted PPG visualizations (.jpg)
- ┃ ┣ 📂 CleanedData          # Noise-filtered PPG signals (.mat)
- ┃ ┣ 📂 ML                   # Extracted features for ML (.csv & .mat)
- ┃ ┣ 📜 Total.mat            # Consolidated label data
- ┃ ┗ 📜 README.md            # Project Documentation
- ┣ 📜 visualize_data.m       # Script for visualizing raw PPG signals
- ┣ 📜 link_data.m            # Links PPG signals with glucose levels
- ┣ 📜 clean_data.m           # Applies FIR filtering to PPG signals
- ┣ 📜 plot_signals.m         # Plots raw vs. cleaned PPG signals
- ┣ 📜 extract_features.m     # Extracts features for ML/CNN
- ┣ 📜 plot_all_trials.m      # Plots all trials for a subject
- ┗ 📜 run_all.m              # Runs all scripts sequentially
-```
-
----
 
 ## **📊 1. Data Visualization**  
 
-### **🔹 What We Did**  
+### **🔹 What I Did**  
 - Explored the dataset and its structure.
 - Plotted individual **PPG signals** to analyze signal variations.
 - Used **`visualize_data.m`** to display signals.  
@@ -88,7 +64,7 @@ This script processes all raw signals and saves the cleaned versions.
 
 ## **📉 4. Plotting Raw vs. Cleaned Signals**  
 
-### **🔹 What We Did**  
+### **🔹 What I Did**  
 - Compared **original (raw) and cleaned PPG signals** to visualize improvements.
 - Displayed signals **before and after noise filtering**.
 
@@ -108,78 +84,56 @@ These scripts generate side-by-side plots of raw and cleaned signals.
 ## **📈 5. Feature Extraction**  
 
 ### **🔹 Features Extracted and Why**  
-We extracted three types of features:
-
-### **⏳ Time-Domain Features**
-| Feature | Description |
-|---------|------------|
-| **Mean** | Average signal value |
-| **STD (Standard Deviation)** | Signal variability |
-| **RMS (Root Mean Square)** | Energy of the signal |
-| **Skewness** | Asymmetry of the waveform |
-| **Kurtosis** | Peak sharpness |
-| **Peak-to-Peak** | Difference between highest and lowest points |
-
-**Why?** These features capture the **magnitude and distribution** of the PPG signals.
+Here’s a clean, professional `README.md` file tailored for your **PPG Signal Feature Extraction** project that includes everything from objectives to instructions:
 
 ---
 
-### **📡 Frequency-Domain Features**
-| Feature | Description |
-|---------|------------|
-| **Peak Frequency** | Dominant frequency in the signal |
-| **Spectral Entropy** | Complexity of frequency distribution |
+## 🧱 Feature Extraction Steps
 
-**Why?** Frequency features help analyze **underlying periodicity** and **autonomic regulation**.
+The pipeline includes the following steps:
+
+### 1. **Raw Data Loading**
+Loads `.mat` files from `RawData/` and corresponding glucose labels from `Labels/`.
+
+### 2. **Preprocessing**
+- FIR Filtering
+- Smoothing with Hanning window
+- Band-pass filtering (0.5 – 20 Hz)
+- Subsampling (D = 5)
+- Z-score normalization
+
+### 3. **Feature Extraction**
+Extracts **18 physiological and signal features**:
+- Time/Frequency Domain: `Mean`, `STD`, `RMS`, `Skewness`, `Kurtosis`, `PeakToPeak`, etc.
+- Entropy-based: `ApproxEntropy`, `SampleEntropy`
+- Fractal-based: `DFA`
+- Wavelet Features: `Energy`, `Entropy`
+
+### 4. **Export**
+- Creates a table: `ExtractedFeaturesTable.mat`
+- Saves a CSV: `ExtractedFeatures.csv` in `/ML`
 
 ---
 
-### **📊 Morphological Features**
-| Feature | Description |
-|---------|------------|
-| **Number of Peaks** | Total detected pulses |
-| **Average Peak Height** | Average systolic peak height |
-| **Peak-to-Peak Interval** | Time between successive peaks |
+## 🚀 How to Run
 
-**Why?** These features help capture **pulse wave characteristics**, which correlate with **glucose fluctuations**.
+### Step 1: Open MATLAB  
+Make sure your working directory is set to the root of this repo.
 
----
+### Step 2: Run the pipeline
 
-### **🛠 How to Run Feature Extraction**  
 ```matlab
-extract_features;
+PPG_FeaturePipeline
 ```
-This script:
-- Extracts all **time-domain, frequency-domain, and morphological features**.
-- Includes **glucose levels**.
-- Saves results in:
-  - `PPG_Features.mat` (MATLAB table).
-  - `PPG_Features.csv` (For ML/CNN).
 
----
+This executes all processes: filtering, normalization, feature extraction, visualization, and export.
 
-## **🚀 6. Running the Entire Pipeline**  
-Instead of running each script manually, execute the entire pipeline using:
+### Step 3: (Optional) Visualize Output  
+You can preview the extracted features with:
+
 ```matlab
-run_all;
+visualizeExtractedFeatures(featureTable);
 ```
-This script sequentially:
-1. **Links PPG signals with glucose levels**.
-2. **Cleans the data using FIR filtering**.
-3. **Extracts all relevant features**.
-4. **Stores everything for ML/CNN training**.
 
----
 
-## **📂 How to Use the Data for Machine Learning**  
-
-### **🛠 Importing Data in Python (Pandas)**
-```python
-import pandas as pd
-df = pd.read_csv("PPG_Dataset/ML/PPG_Features.csv")
-df.head()
-```
-This loads the **pre-processed dataset** for training machine learning models.
-
----
 
