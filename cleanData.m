@@ -48,7 +48,7 @@ function plotPPGComparison(subject_id, trial_number)
     ylabel('Amplitude');
     grid on;
 
-    disp(['✅ Comparison plot generated for Subject ', subject_id, ', Trial ', trial_number]);
+    disp([' Comparison plot generated for Subject ', subject_id, ', Trial ', trial_number]);
 end
 
 
@@ -144,7 +144,7 @@ raw_files = dir(fullfile(raw_data_path, '*.mat'));
 num_files = length(raw_files);
 
 % FIR Filter Design (Low-pass Filter)
-fs = 1000;  % Sampling frequency (change if needed)
+fs = 435;  % Sampling frequency 
 fc = 5;     % Cutoff frequency in Hz
 N = 50;     % Filter order
 fir_coeff = fir1(N, fc/(fs/2), 'low'); % Low-pass FIR filter design
