@@ -5,32 +5,27 @@ import adafruit_ssd1306
 import adafruit_ads1x15.ads1015 as ADS
 from adafruit_ads1x15.analog_in import AnalogIn
 from PIL import Image, ImageDraw
-import RPi.GPIO as GPIO
+from gpiozero import LED
 import numpy as np
 import tflite_runtime.interpreter as tflite
 from sklearn.preprocessing import MinMaxScaler
 
-# === GPIO SETUP ===
-GREEN = 9  # GPIO11
-YELLOW = 11  # GPIO11
-RED = 10  # GPIO9
-
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(GREEN, GPIO.OUT)
-GPIO.setup(YELLOW, GPIO.OUT)
-GPIO.setup(RED, GPIO.OUT)
+# === GPIOZERO LED SETUP ===
+green_led = LED(9)     # GPIO9
+yellow_led = LED(11)   # GPIO11
+red_led = LED(10)      # GPIO10
 
 def light_led(glucose):
-    GPIO.output(GREEN, GPIO.LOW)
-    GPIO.output(YELLOW, GPIO.LOW)
-    GPIO.output(RED, GPIO.LOW)
+    green_led.off()
+    yellow_led.off()
+    red_led.off()
 
     if glucose < 100:
-        GPIO.output(GREEN, GPIO.HIGH)
+        green_led.on()
     elif glucose < 126:
-        GPIO.output(YELLOW, GPIO.HIGH)
+        yellow_led.on()
     else:
-        GPIO.output(RED, GPIO.HIGH)
+        red_led.on()
 
 # === I2C & OLED SETUP ===
 i2c = busio.I2C(board.SCL, board.SDA)
