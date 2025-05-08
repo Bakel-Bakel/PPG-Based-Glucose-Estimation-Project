@@ -11,9 +11,9 @@ import tflite_runtime.interpreter as tflite
 from sklearn.preprocessing import MinMaxScaler
 
 # === GPIO SETUP ===
-GREEN = 11  # GPIO11
-YELLOW = 10  # GPIO10
-RED = 9  # GPIO9
+GREEN = 9  # GPIO11
+YELLOW = 11  # GPIO11
+RED = 10  # GPIO9
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(GREEN, GPIO.OUT)
