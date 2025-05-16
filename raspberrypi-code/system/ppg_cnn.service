@@ -1,0 +1,14 @@
+[Unit]
+Description=PPG CNN Glucose Estimator Service
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/python /home/pi/PPG-Based-Glucose-Estimation-Project/raspberrypi-code/ppg_cnn.py
+WorkingDirectory=/home/pi/PPG-Based-Glucose-Estimation-Project/raspberrypi-code
+StandardOutput=inherit
+StandardError=inherit
+Restart=on-failure
+User=pi
+
+[Install]
+WantedBy=multi-user.target
