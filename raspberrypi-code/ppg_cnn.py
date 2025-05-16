@@ -124,12 +124,12 @@ def run_once():
     send_email(prediction)
     light_led(prediction)
 
-    # 3. CLEAR AND POWER OFF OLED
+    # 3. CLEAR
     oled.fill(0)
     oled.show()
-    oled.poweroff()  # Optional: physically turns off OLED power if supported
-    print("OLED display turned off after measurement.")
+    print("OLED display cleared after measurement.")
 
+    
 
 # === BIND THE BUTTON TO THE RUN FUNCTION ===
 start_switch.when_pressed = run_once
