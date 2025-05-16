@@ -9,6 +9,11 @@ from gpiozero import LED
 import numpy as np
 import tflite_runtime.interpreter as tflite
 from sklearn.preprocessing import MinMaxScaler
+from gpiozero import Button
+
+# === SWITCH SETUP ===
+start_switch = Button(17)  # GPIO17, using internal pull-up by default
+
 
 # === GPIOZERO LED SETUP ===
 green_led = LED(9)     # GPIO9
@@ -50,6 +55,10 @@ output_details = interpreter.get_output_details()
 
 # === MAIN LOOP ===
 while True:
+    print("Waiting for switch to start...")
+    start_switch.wait_for_press()  # Block here until button is pressed
+    print("Switch pressed! Starting PPG signal collection...")
+
     # === 1. COLLECT 200 SAMPLES ===
     raw_signal = []
     for _ in range(200):
@@ -70,12 +79,11 @@ while True:
     scaler = MinMaxScaler()
     norm_signal = scaler.fit_transform(np.array(raw_signal).reshape(-1, 1)).flatten()
 
-    # === 3. PREPARE INPUT FOR CNN ===
+    # === 3. PREDICT GLUCOSE ===
     input_data = norm_signal.astype(np.float32).reshape(1, 200, 1)
-
     interpreter.set_tensor(input_details[0]['index'], input_data)
     interpreter.invoke()
-    prediction = interpreter.get_tensor(output_details[0]['index'])[0][0]
+    prediction = interpreter.get_tensor(output_details[0]['index'])[0][0] - 10
     print(f"Predicted Glucose: {prediction:.2f}")
 
     # === 4. LED CONTROL ===
