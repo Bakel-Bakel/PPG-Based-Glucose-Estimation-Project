@@ -1,0 +1,7 @@
+numpy
+Pillow
+gpiozero
+adafruit-circuitpython-ads1x15
+adafruit-circuitpython-ssd1306
+tflite-runtime
+scikit-learn
