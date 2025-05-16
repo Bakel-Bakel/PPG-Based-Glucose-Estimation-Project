@@ -1,6 +1,6 @@
 % Set directory paths
-raw_data_path = 'PPG_Dataset/RawData';  % Change to actual path
-labels_path = 'PPG_Dataset/Labels';     % Change to actual path
+raw_data_path = '../PPG_Dataset/RawData';  % Change to actual path
+labels_path = '../PPG_Dataset/Labels';     % Change to actual path
 
 % List all .mat files in the RawData folder
 raw_files = dir(fullfile(raw_data_path, '*.mat'));

@@ -5,8 +5,8 @@ function plotPPGComparison(subject_id, trial_number)
     %   trial_number: String or number representing trial number (e.g., '0001')
     
     % Define paths
-    raw_data_path = 'PPG_Dataset/RawData';      % Path to raw data
-    cleaned_data_path = 'PPG_Dataset/CleanedData'; % Path to cleaned signals
+    raw_data_path = '../PPG_Dataset/RawData';      % Path to raw data
+    cleaned_data_path = '../PPG_Dataset/CleanedData'; % Path to cleaned signals
 
     % Construct file names
     file_name = sprintf('signal_%s_%s.mat', subject_id, trial_number);
@@ -58,9 +58,9 @@ function plotAllTrialsForSubject(subject_id)
     %   subject_id: String or number representing subject ID (e.g., '01')
 
     % Define paths
-    raw_data_path = 'PPG_Dataset/RawData';       % Path to raw data
-    cleaned_data_path = 'PPG_Dataset/CleanedData'; % Path to cleaned signals
-    labels_path = 'PPG_Dataset/Labels';          % Path to label files
+    raw_data_path = '../PPG_Dataset/RawData';       % Path to raw data
+    cleaned_data_path = '../PPG_Dataset/CleanedData'; % Path to cleaned signals
+    labels_path = '../PPG_Dataset/Labels';          % Path to label files
 
     % Get all available trials (000Y) for the given subject
     raw_files = dir(fullfile(raw_data_path, sprintf('signal_%s_*.mat', subject_id)));
@@ -126,15 +126,15 @@ function plotAllTrialsForSubject(subject_id)
         grid on;
     end
 
-    disp(['✅ Comparison plots generated for Subject ', subject_id, ' with ', num2str(num_trials), ' trials and glucose levels.']);
+    disp(['Comparison plots generated for Subject ', subject_id, ' with ', num2str(num_trials), ' trials and glucose levels.']);
 end
 
 
 
 
 % Set directory path for RawData
-raw_data_path = 'PPG_Dataset/RawData';  % Change to actual path
-filtered_data_path = 'PPG_Dataset/CleanedData'; % Folder for storing cleaned signals
+raw_data_path = '../PPG_Dataset/RawData';  % Change to actual path
+filtered_data_path = '../PPG_Dataset/CleanedData'; % Folder for storing cleaned signals
 if ~exist(filtered_data_path, 'dir')
     mkdir(filtered_data_path);
 end

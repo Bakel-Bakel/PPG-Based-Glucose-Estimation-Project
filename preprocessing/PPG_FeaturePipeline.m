@@ -1,7 +1,7 @@
 function PPG_FeaturePipeline()
     % Main function to run full feature extraction pipeline
-    rawDataPath = 'PPG_Dataset/RawData';
-    labelPath = 'PPG_Dataset/Labels';
+    rawDataPath = '../PPG_Dataset/RawData';
+    labelPath = '../PPG_Dataset/Labels';
     outputPath = 'ML';
     if ~exist(outputPath, 'dir'); mkdir(outputPath); end
 
