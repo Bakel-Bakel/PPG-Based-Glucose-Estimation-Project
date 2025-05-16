@@ -34,9 +34,9 @@ def send_email(glucose_value):
         diagnosis = "Diabetic"
 
     # --- Email setup ---
-    sender_email = "begededum4bakel@gmail.com"
+    sender_email = "Almahfouzm@gmail.com"
     recipients = ["Almahfouzm@gmail.com", "begededum4bakel@gmail.com", "elect.noura@gmail.com"]
-    app_password = "goeb nrrh hzgx gwos"
+    app_password = "wjwu japf rozh pflo"
 
     subject = "Glucose Prediction Result"
     body = f"""
