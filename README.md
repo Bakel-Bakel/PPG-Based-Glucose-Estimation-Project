@@ -15,6 +15,11 @@ This project implements a complete pipeline for real-time glucose level estimati
 
 The system is designed to run **automatically at startup**, making it ideal for standalone, remote, or medical monitoring applications.
 
+[Preprocessing](preprocessing/README.md)
+
+[Machine Learning and Training](ML/README.md)
+
+
 ---
 
 ## 🧠 Features
@@ -34,7 +39,7 @@ The system is designed to run **automatically at startup**, making it ideal for 
 
 ## 🛠️ Technologies & Hardware
 
-- **Raspberry Pi** (tested on Pi 3/4)
+- **Raspberry Pi** (tested on Pi 5)
 - **PPG Sensor** connected via **ADS1015 ADC**
 - **OLED SSD1306 Display** (I2C, 128x64)
 - **GPIO LEDs** and **Tactile Push Button**
