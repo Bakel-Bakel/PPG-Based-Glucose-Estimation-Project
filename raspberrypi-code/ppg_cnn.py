@@ -55,9 +55,9 @@ def send_email(glucose_value):
         server.login(sender_email, app_password)
         server.sendmail(sender_email, recipients, msg.as_string())
         server.quit()
-        print("📧 Email sent successfully.")
+        print("Email sent successfully.")
     except Exception as e:
-        print(f"❌ Failed to send email: {e}")
+        print(f"Failed to send email: {e}")
 
 def light_led(glucose):
     green_led.off()
@@ -128,11 +128,11 @@ def run_once():
     oled.fill(0)
     oled.show()
     oled.poweroff()  # Optional: physically turns off OLED power if supported
-    print("📴 OLED display turned off after measurement.")
+    print("OLED display turned off after measurement.")
 
 
 # === BIND THE BUTTON TO THE RUN FUNCTION ===
 start_switch.when_pressed = run_once
 
-print("✅ System ready. Press the button to start measurement...")
+print("System ready. Press the button to start measurement...")
 pause()  # Keeps script running forever
