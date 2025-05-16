@@ -135,7 +135,9 @@ while run:
 
     
 
-    # === 4. LED CONTROL ===
-    light_led(prediction)
+    
     run = False
+
+# === 4. LED CONTROL ===
+light_led(prediction)
     
