@@ -17,7 +17,7 @@ The system is designed to run **automatically at startup**, making it ideal for 
 
 [Preprocessing](preprocessing/README.md)
 
-[Machine Learning and Training](ML/README.md)
+[Machine Learning and Training](ML/)
 
 
 ---
