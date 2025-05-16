@@ -5,27 +5,24 @@ import adafruit_ssd1306
 import adafruit_ads1x15.ads1015 as ADS
 from adafruit_ads1x15.analog_in import AnalogIn
 from PIL import Image, ImageDraw
-from gpiozero import LED
+from gpiozero import LED, Button
 import numpy as np
 import tflite_runtime.interpreter as tflite
 from sklearn.preprocessing import MinMaxScaler
-from gpiozero import Button
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-
+from signal import pause
 
 # === SWITCH SETUP ===
-start_switch = Button(17)  # GPIO17, using internal pull-up by default
+start_switch = Button(17)  # GPIO17, pull-up by default
 
-
-# === GPIOZERO LED SETUP ===
-green_led = LED(9)     # GPIO9
-yellow_led = LED(11)   # GPIO11
-red_led = LED(10)      # GPIO10
+# === LED SETUP ===
+green_led = LED(9)
+yellow_led = LED(11)
+red_led = LED(10)
 
 def send_email(glucose_value):
-    # --- Diagnosis logic ---
     if glucose_value < 100:
         diagnosis = "Healthy"
     elif glucose_value < 126:
@@ -33,9 +30,8 @@ def send_email(glucose_value):
     else:
         diagnosis = "Diabetic"
 
-    # --- Email setup ---
     sender_email = "Almahfouzm@gmail.com"
-    recipients = ["elect.noura@gmail.com", "Almahfouzm@gmail.com" ,"mahaalfaresii@gmail.com"]
+    recipients = ["elect.noura@gmail.com", "Almahfouzm@gmail.com", "mahaalfaresii@gmail.com"]
     app_password = "wjwu japf rozh pflo"
 
     subject = "Glucose Prediction Result"
@@ -50,7 +46,7 @@ def send_email(glucose_value):
 
     msg = MIMEMultipart()
     msg['From'] = sender_email
-    msg['To'] = ", ".join(recipients)  # Visible list in email header
+    msg['To'] = ", ".join(recipients)
     msg['Subject'] = subject
     msg.attach(MIMEText(body, 'plain'))
 
@@ -59,11 +55,9 @@ def send_email(glucose_value):
         server.login(sender_email, app_password)
         server.sendmail(sender_email, recipients, msg.as_string())
         server.quit()
-        print("📧 Email sent successfully to multiple recipients.")
+        print("📧 Email sent successfully.")
     except Exception as e:
         print(f"❌ Failed to send email: {e}")
-
-
 
 def light_led(glucose):
     green_led.off()
@@ -97,15 +91,12 @@ interpreter = tflite.Interpreter(model_path="cnn_glucose_regressor.tflite")
 interpreter.allocate_tensors()
 input_details = interpreter.get_input_details()
 output_details = interpreter.get_output_details()
-run = True
 
-# === MAIN LOOP ===
-while run:
-    print("Waiting for switch to start...")
-    start_switch.wait_for_press()  # Block here until button is pressed
+# === MAIN FUNCTION ===
+def run_once():
     print("Switch pressed! Starting PPG signal collection...")
 
-    # === 1. COLLECT 200 SAMPLES ===
+    # 1. COLLECT SIGNAL
     raw_signal = []
     for _ in range(200):
         voltage = chan.voltage
@@ -121,23 +112,27 @@ while run:
         oled.show()
         time.sleep(0.05)
 
-    # === 2. NORMALIZE SIGNAL ===
+    # 2. NORMALIZE & PREDICT
     scaler = MinMaxScaler()
     norm_signal = scaler.fit_transform(np.array(raw_signal).reshape(-1, 1)).flatten()
-
-    # === 3. PREDICT GLUCOSE ===
     input_data = norm_signal.astype(np.float32).reshape(1, 200, 1)
     interpreter.set_tensor(input_details[0]['index'], input_data)
     interpreter.invoke()
     prediction = interpreter.get_tensor(output_details[0]['index'])[0][0] - 20
+
     print(f"Predicted Glucose: {prediction:.2f}")
     send_email(prediction)
+    light_led(prediction)
 
-    
+    # 3. CLEAR AND POWER OFF OLED
+    oled.fill(0)
+    oled.show()
+    oled.poweroff()  # Optional: physically turns off OLED power if supported
+    print("📴 OLED display turned off after measurement.")
 
-    
-    run = False
 
-# === 4. LED CONTROL ===
-light_led(prediction)
-    
+# === BIND THE BUTTON TO THE RUN FUNCTION ===
+start_switch.when_pressed = run_once
+
+print("✅ System ready. Press the button to start measurement...")
+pause()  # Keeps script running forever
