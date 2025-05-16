@@ -10,6 +10,10 @@ import numpy as np
 import tflite_runtime.interpreter as tflite
 from sklearn.preprocessing import MinMaxScaler
 from gpiozero import Button
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+
 
 # === SWITCH SETUP ===
 start_switch = Button(17)  # GPIO17, using internal pull-up by default
@@ -19,6 +23,47 @@ start_switch = Button(17)  # GPIO17, using internal pull-up by default
 green_led = LED(9)     # GPIO9
 yellow_led = LED(11)   # GPIO11
 red_led = LED(10)      # GPIO10
+
+def send_email(glucose_value):
+    # --- Diagnosis logic ---
+    if glucose_value < 100:
+        diagnosis = "Healthy"
+    elif glucose_value < 126:
+        diagnosis = "Pre-Diabetic"
+    else:
+        diagnosis = "Diabetic"
+
+    # --- Email setup ---
+    sender_email = "begededum4bakel@gmail.com"
+    recipients = ["Almahfouzm@gmail.com", "begededum4bakel@gmail.com", "elect.noura@gmail.com"]
+    app_password = "goeb nrrh hzgx gwos"
+
+    subject = "Glucose Prediction Result"
+    body = f"""
+    Glucose Prediction Report:
+    ---------------------------
+    Predicted Glucose Level: {glucose_value:.2f} mg/dL
+    Diagnosis: {diagnosis}
+
+    This message was sent automatically from your Raspberry Pi glucose monitor.
+    """
+
+    msg = MIMEMultipart()
+    msg['From'] = sender_email
+    msg['To'] = ", ".join(recipients)  # Visible list in email header
+    msg['Subject'] = subject
+    msg.attach(MIMEText(body, 'plain'))
+
+    try:
+        server = smtplib.SMTP_SSL("smtp.gmail.com", 465)
+        server.login(sender_email, app_password)
+        server.sendmail(sender_email, recipients, msg.as_string())
+        server.quit()
+        print("📧 Email sent successfully to multiple recipients.")
+    except Exception as e:
+        print(f"❌ Failed to send email: {e}")
+
+
 
 def light_led(glucose):
     green_led.off()
@@ -52,9 +97,10 @@ interpreter = tflite.Interpreter(model_path="cnn_glucose_regressor.tflite")
 interpreter.allocate_tensors()
 input_details = interpreter.get_input_details()
 output_details = interpreter.get_output_details()
+run = True
 
 # === MAIN LOOP ===
-while True:
+while run:
     print("Waiting for switch to start...")
     start_switch.wait_for_press()  # Block here until button is pressed
     print("Switch pressed! Starting PPG signal collection...")
@@ -83,8 +129,13 @@ while True:
     input_data = norm_signal.astype(np.float32).reshape(1, 200, 1)
     interpreter.set_tensor(input_details[0]['index'], input_data)
     interpreter.invoke()
-    prediction = interpreter.get_tensor(output_details[0]['index'])[0][0] - 10
+    prediction = interpreter.get_tensor(output_details[0]['index'])[0][0] - 20
     print(f"Predicted Glucose: {prediction:.2f}")
+    send_email(prediction)
+
+    
 
     # === 4. LED CONTROL ===
     light_led(prediction)
+    run = False
+    
