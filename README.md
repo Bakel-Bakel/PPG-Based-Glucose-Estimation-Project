@@ -1,4 +1,4 @@
-# GlucoseSense System
+# Non-Invasive Glucose Estimation Project
 
 A non-invasive, edge-deployed glucose monitoring system built using a Raspberry Pi, a photoplethysmography (PPG) sensor, a machine learning model, and GPIO-based feedback components. This project estimates blood glucose levels using PPG signals, displays real-time waveforms on an OLED screen, and provides automatic email alerts and LED indicators based on the prediction.
 
